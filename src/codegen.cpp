@@ -5630,9 +5630,36 @@ static std::unique_ptr<Module> emit_function(
     DISubprogram *SP = NULL;
     DebugLoc noDbg, topdebugloc;
     if (ctx.debug_enabled) {
+        DICompileUnit::DebugEmissionKind emissionKind = DICompileUnit::DebugEmissionKind::FullDebug;
+#if JL_LLVM_VERSION >= 80000
+        DICompileUnit::DebugNameTableKind tableKind   = DICompileUnit::DebugNameTableKind::GNU;
+        // NVPTX has limited support for debuginfo from LLVM8 onwards
+        if (JL_FEAT_TEST(ctx, nvptx_debuginfo)) {
+            tableKind = DICompileUnit::DebugNameTableKind::None;
+            if (jl_options.debug_level <= 1) {
+                emissionKind = DICompileUnit::DebugEmissionKind::DebugDirectivesOnly;
+            }
+        }
+#endif
         // TODO: Fix when moving to new LLVM version
         topfile = dbuilder.createFile(ctx.file, ".");
-        DICompileUnit *CU = dbuilder.createCompileUnit(0x01, topfile, "julia", true, "", 0);
+        DICompileUnit *CU =
+            dbuilder.createCompileUnit(0x01          // Language -- C89
+                                       ,topfile      // File
+                                       ,"julia"      // Producer
+                                       ,true         // isOptimized
+                                       ,""           // Flags
+                                       ,0            // RuntimeVersion
+                                       ,""           // SplitName
+                                       ,emissionKind // Kind
+                                       ,0            // DWOId
+                                       ,true         // SplitDebugInlining
+                                       ,false        // DebugInfoForProfiling
+#if JL_LLVM_VERSION >= 80000
+                                       ,tableKind    // NameTableKind
+#endif
+                                       );
+
         DISubroutineType *subrty;
         if (jl_options.debug_level <= 1) {
             subrty = jl_di_func_null_sig;
