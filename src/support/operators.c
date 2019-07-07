@@ -33,23 +33,23 @@ double conv_to_double(void *data, numerictype_t tag)
     return d;
 }
 
-#define CONV_TO_INTTYPE(type)                               \
-type##_t conv_to_##type(void *data, numerictype_t tag)      \
-{                                                           \
-    type##_t i=0;                                           \
-    switch (tag) {                                          \
-    case T_INT8:   i = (type##_t)*(int8_t*)data; break;     \
-    case T_UINT8:  i = (type##_t)*(uint8_t*)data; break;    \
-    case T_INT16:  i = (type##_t)*(int16_t*)data; break;    \
-    case T_UINT16: i = (type##_t)*(uint16_t*)data; break;   \
-    case T_INT32:  i = (type##_t)*(int32_t*)data; break;    \
-    case T_UINT32: i = (type##_t)*(uint32_t*)data; break;   \
-    case T_INT64:  i = (type##_t)*(int64_t*)data; break;    \
-    case T_UINT64: i = (type##_t)*(uint64_t*)data; break;   \
-    case T_FLOAT:  i = (type##_t)*(float*)data; break;      \
-    case T_DOUBLE: i = (type##_t)*(double*)data; break;     \
-    }                                                       \
-    return i;                                               \
+#define CONV_TO_INTTYPE(type)                                                    \
+type##_t conv_to_##type(void *data, numerictype_t tag)                           \
+{                                                                                \
+    type##_t i=0;                                                                \
+    switch (tag) {                                                               \
+    case T_INT8:   i = (type##_t)*(int8_t*)data; break;                          \
+    case T_UINT8:  i = (type##_t)*(uint8_t*)data; break;                         \
+    case T_INT16:  i = (type##_t)(int16_t)jl_load_unaligned_i16(data); break;    \
+    case T_UINT16: i = (type##_t)jl_load_unaligned_i16(data); break;             \
+    case T_INT32:  i = (type##_t)(int32_t)jl_load_unaligned_i32(data); break;    \
+    case T_UINT32: i = (type##_t)jl_load_unaligned_i32(data); break;             \
+    case T_INT64:  i = (type##_t)(int64_t)jl_load_unaligned_i64(data); break;    \
+    case T_UINT64: i = (type##_t)jl_load_unaligned_i64(data); break;             \
+    case T_FLOAT:  i = (type##_t)*(float*)data; break;                           \
+    case T_DOUBLE: i = (type##_t)*(double*)data; break;                          \
+    }                                                                            \
+    return i;                                                                    \
 }
 
 CONV_TO_INTTYPE(int64)
