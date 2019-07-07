@@ -1979,6 +1979,7 @@ typedef struct {
     int code_coverage;      // can we measure coverage?
     int static_alloc;       // is the compiler allowed to allocate statically?
     int prefer_specsig;     // are specialized function signatures preferred?
+    int nvptx_debuginfo;    // turn off unsupported debuginfo features for NVPTX
 
 
     // hooks

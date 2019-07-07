@@ -934,6 +934,7 @@ struct CodegenParams
     code_coverage::Cint
     static_alloc::Cint
     prefer_specsig::Cint
+    nvptx_debuginfo::Cint
 
     module_setup::Any
     module_activation::Any
@@ -944,11 +945,13 @@ struct CodegenParams
     CodegenParams(;cached::Bool=true,
                    track_allocations::Bool=true, code_coverage::Bool=true,
                    static_alloc::Bool=true, prefer_specsig::Bool=false,
+                   nvptx_debuginfo=false,
                    module_setup=nothing, module_activation=nothing, raise_exception=nothing,
                    emit_function=nothing, emitted_function=nothing) =
         new(Cint(cached),
             Cint(track_allocations), Cint(code_coverage),
             Cint(static_alloc), Cint(prefer_specsig),
+            Cint(nvptx_debuginfo),
             module_setup, module_activation, raise_exception,
             emit_function, emitted_function)
 end

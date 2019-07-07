@@ -340,7 +340,7 @@ static std::map<jl_fptr_args_t, Function*> builtin_func_map;
 // --- code generation ---
 extern "C" {
     int globalUnique = 0;
-    jl_cgparams_t jl_default_cgparams = {1, 1, 1, 1, 0, NULL, NULL, NULL, NULL, NULL};
+    jl_cgparams_t jl_default_cgparams = {1, 1, 1, 1, 0, 0, NULL, NULL, NULL, NULL, NULL};
 }
 
 template<typename T>
